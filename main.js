@@ -9,6 +9,12 @@ const ctx = canvas.getContext('2d', { alpha: false });
 const scrollTrack = document.getElementById('scroll-track');
 const scrollPrompt = document.getElementById('scroll-prompt');
 
+// Preloader Elements
+const preloader = document.getElementById('preloader');
+const preloaderBar = document.getElementById('preloader-bar');
+const preloaderPercent = document.getElementById('preloader-percent');
+const preloaderStatus = document.querySelector('.preloader-status');
+
 // UI Overlays
 const homeOverlay = document.getElementById('home-overlay');
 const inspectionOverlay = document.getElementById('inspection-overlay');
@@ -147,10 +153,11 @@ floorHitboxes.forEach((box) => {
 });
 
 // ----------------------------------------------------------------------------
-// 1080P ENHANCED FRAME PIPELINE
+// 1080P ENHANCED FRAME PIPELINE WITH PRELOADER TRACKING
 // ----------------------------------------------------------------------------
 const F1_COUNT = 302;
 const F2_COUNT = 240;
+const TOTAL_FRAMES = F1_COUNT + F2_COUNT;
 
 const frames1 = [];
 const frames2 = [];
@@ -163,20 +170,85 @@ function pad(num, size = 4) {
 
 const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
+let loadedCount = 0;
+let currentDisplayPercent = 0;
+let isPreloaderComplete = false;
+
+// Lock interaction and scroll immediately while sequence downloads
+document.body.style.overflow = 'hidden';
+window.scrollTo(0, 0);
+
+function updateLoaderProgress(target) {
+  gsap.to({ val: currentDisplayPercent }, {
+    val: target,
+    duration: 0.22,
+    ease: 'power1.out',
+    onUpdate: function() {
+      currentDisplayPercent = Math.floor(this.targets()[0].val);
+      if (preloaderBar) preloaderBar.style.width = `${currentDisplayPercent}%`;
+      if (preloaderPercent) preloaderPercent.textContent = `${currentDisplayPercent}%`;
+
+      if (currentDisplayPercent >= 100 && !isPreloaderComplete) {
+        completePreloader();
+      }
+    }
+  });
+}
+
+function completePreloader() {
+  if (isPreloaderComplete) return;
+  isPreloaderComplete = true;
+
+  if (preloaderStatus) preloaderStatus.textContent = 'Sequence Ready';
+  if (preloaderBar) preloaderBar.style.width = '100%';
+  if (preloaderPercent) preloaderPercent.textContent = '100%';
+
+  render();
+
+  setTimeout(() => {
+    if (preloader) {
+      preloader.classList.add('fade-out');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+        document.body.style.overflow = '';
+        lenis.start();
+        ScrollTrigger.refresh();
+      }, 850);
+    }
+  }, 350);
+}
+
+function onFrameFinished(i, isF1) {
+  loadedCount++;
+  if (isF1 && i === 1) {
+    render();
+  }
+  const realPercent = Math.min(100, Math.floor((loadedCount / TOTAL_FRAMES) * 100));
+  updateLoaderProgress(realPercent);
+}
+
 for (let i = 1; i <= F1_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames1/frame_${pad(i)}.jpg`;
-  img.onload = () => {
-    if (i === 1) render();
-  };
+  img.onload = () => onFrameFinished(i, true);
+  img.onerror = () => onFrameFinished(i, true);
   frames1.push(img);
 }
 
 for (let i = 1; i <= F2_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames2/frame_${pad(i)}.jpg`;
+  img.onload = () => onFrameFinished(i, false);
+  img.onerror = () => onFrameFinished(i, false);
   frames2.push(img);
 }
+
+// Fallback safety: ensures unlock even if remote network delays a single frame
+setTimeout(() => {
+  if (!isPreloaderComplete && loadedCount >= Math.floor(TOTAL_FRAMES * 0.5)) {
+    updateLoaderProgress(100);
+  }
+}, 10000);
 
 function getLoadedFrame(list, targetIdx) {
   const target = list[targetIdx];
@@ -358,6 +430,9 @@ const lenis = new Lenis({
   wheelMultiplier: 0.95,
   touchMultiplier: 1.5,
 });
+
+// Locked until sequence is loaded
+lenis.stop();
 
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((time) => {

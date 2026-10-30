@@ -13,6 +13,24 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
+  <!-- Luxury Architectural Preloader Screen (Locks screen until video frames are downloaded) -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-monogram">
+        <span class="m-top">A /</span>
+        <span class="m-bot">R A</span>
+      </div>
+      <h2 class="preloader-title">( Aura Residences x Milan )</h2>
+      <div class="preloader-bar-wrap">
+        <div id="preloader-bar" class="preloader-bar"></div>
+      </div>
+      <div class="preloader-meta">
+        <span class="preloader-status">Loading Sequence...</span>
+        <span id="preloader-percent" class="preloader-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Fixed Fullscreen Canvas Stage -->
   <div id="stage">
     <canvas id="canvas"></canvas>

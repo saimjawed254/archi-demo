@@ -39,6 +39,116 @@ html, body {
 }
 
 /* ==========================================================================
+   LUXURY ARCHITECTURAL PRELOADER SCREEN
+   ========================================================================== */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #06080b;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.85s ease,
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-24px);
+  pointer-events: none;
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
+  max-width: 440px;
+  width: 88%;
+  text-align: center;
+}
+
+.preloader-monogram {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: 0.25em;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(255, 157, 0, 0.85), 0 2px 10px rgba(0, 0, 0, 0.95);
+  animation: pulseMonogram 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseMonogram {
+  0%, 100% { opacity: 0.85; transform: scale(0.97); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.preloader-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.9rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow: 0 0 25px rgba(255, 157, 0, 0.55), 0 4px 18px rgba(0, 0, 0, 0.95);
+}
+
+.preloader-bar-wrap {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.preloader-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff8400 0%, #ffaa22 60%, #ffffff 100%);
+  box-shadow: 0 0 16px rgba(255, 157, 0, 0.95), 0 0 8px rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  transition: width 0.18s ease-out;
+}
+
+.preloader-meta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.preloader-status {
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.preloader-percent {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: #ffb830;
+  text-shadow: 0 0 12px rgba(255, 157, 0, 0.85);
+}
+
+/* ==========================================================================
    PERSISTENT TOP NAVIGATION WITH ORANGE AMBIENT GLOW & CONTRAST SHADOW
    ========================================================================== */
 
