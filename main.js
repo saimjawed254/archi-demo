@@ -166,9 +166,9 @@ floorHitboxes.forEach((box) => {
 // ----------------------------------------------------------------------------
 // 1080P ENHANCED FRAME PIPELINE WITH PRELOADER TRACKING (VIDEOS 1, 2, 3)
 // ----------------------------------------------------------------------------
-const F1_COUNT = 302;
-const F2_COUNT = 240;
-const F3_COUNT = 289;
+const F1_COUNT = 151;
+const F2_COUNT = 120;
+const F3_COUNT = 145;
 const TOTAL_FRAMES = F1_COUNT + F2_COUNT + F3_COUNT;
 
 const frames1 = [];
@@ -246,7 +246,7 @@ function onFrameFinished(i, tag) {
 
 for (let i = 1; i <= F1_COUNT; i++) {
   const img = new Image();
-  img.src = `${BASE}/frames1/frame_${pad(i)}.jpg`;
+  img.src = `${BASE}/frames1/frame_${pad(i)}.webp`;
   img.onload = () => onFrameFinished(i, 'f1');
   img.onerror = () => onFrameFinished(i, 'f1');
   frames1.push(img);
@@ -254,7 +254,7 @@ for (let i = 1; i <= F1_COUNT; i++) {
 
 for (let i = 1; i <= F2_COUNT; i++) {
   const img = new Image();
-  img.src = `${BASE}/frames2/frame_${pad(i)}.jpg`;
+  img.src = `${BASE}/frames2/frame_${pad(i)}.webp`;
   img.onload = () => onFrameFinished(i, 'f2');
   img.onerror = () => onFrameFinished(i, 'f2');
   frames2.push(img);
@@ -262,7 +262,7 @@ for (let i = 1; i <= F2_COUNT; i++) {
 
 for (let i = 1; i <= F3_COUNT; i++) {
   const img = new Image();
-  img.src = `${BASE}/frames3/frame_${pad(i)}.jpg`;
+  img.src = `${BASE}/frames3/frame_${pad(i)}.webp`;
   img.onload = () => onFrameFinished(i, 'f3');
   img.onerror = () => onFrameFinished(i, 'f3');
   frames3.push(img);
