@@ -168,7 +168,7 @@ floorHitboxes.forEach((box) => {
 // ----------------------------------------------------------------------------
 const F1_COUNT = 302;
 const F2_COUNT = 240;
-const F3_COUNT = 240;
+const F3_COUNT = 289;
 const TOTAL_FRAMES = F1_COUNT + F2_COUNT + F3_COUNT;
 
 const frames1 = [];
@@ -321,11 +321,28 @@ function drawMirroredEdgesAndCenter(img, alpha = 1.0, targetCtx = ctx, targetCan
     targetCtx.drawImage(img, 0, 0, imgW * 0.35, imgH, 0, shiftY, shiftX, renderH);
     targetCtx.restore();
 
-    // Right edge repeat (mirrored reflection)
+    // Right edge repeat (mirrored reflection, safely bounded to 0.85 width to completely exclude the watermark)
     targetCtx.save();
     targetCtx.translate(canvasW - shiftX, 0);
     targetCtx.scale(-1, 1);
-    targetCtx.drawImage(img, imgW * 0.65, 0, imgW * 0.35, imgH, -shiftX, shiftY, shiftX, renderH);
+    targetCtx.drawImage(img, imgW * 0.55, 0, imgW * 0.30, imgH, -shiftX, shiftY, shiftX, renderH);
+    targetCtx.restore();
+  }
+
+  // Fill top & bottom blank spaces on vertical/portrait viewports
+  if (shiftY > 0) {
+    // Top edge repeat
+    targetCtx.save();
+    targetCtx.translate(0, shiftY);
+    targetCtx.scale(1, -1);
+    targetCtx.drawImage(img, 0, 0, imgW, imgH * 0.35, shiftX, 0, renderW, shiftY);
+    targetCtx.restore();
+
+    // Bottom edge repeat (safely bounded to avoid watermark at bottom-right)
+    targetCtx.save();
+    targetCtx.translate(0, canvasH - shiftY);
+    targetCtx.scale(1, -1);
+    targetCtx.drawImage(img, 0, imgH * 0.45, imgW, imgH * 0.32, shiftX, -shiftY, renderW, shiftY);
     targetCtx.restore();
   }
 
