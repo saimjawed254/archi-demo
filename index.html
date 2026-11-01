@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA // Architectural Studio</title>
+  
+  <!-- Fonts: Inter for Minimalist Sans, Cormorant Garamond for Editorial Luxury Serif -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <script type="module" crossorigin src="/archi-demo/assets/index-DXU_P5Yb.js"></script>
+  <link rel="stylesheet" crossorigin href="/archi-demo/assets/index-lY4Gwwzd.css">
+</head>
+<body>
+  <!-- Luxury Architectural Preloader Screen (Locks screen until video frames are downloaded) -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-monogram">
+        <span class="m-top">A /</span>
+        <span class="m-bot">R A</span>
+      </div>
+      <h2 class="preloader-title">( Aura Residences x Milan )</h2>
+      <div class="preloader-bar-wrap">
+        <div id="preloader-bar" class="preloader-bar"></div>
+      </div>
+      <div class="preloader-meta">
+        <span class="preloader-status">Loading Sequence...</span>
+        <span id="preloader-percent" class="preloader-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persistent Top Navigation (TARQ Studio Inspired with Orange Ambient Glow) -->
+  <header id="tarq-header" class="tarq-header">
+    <div class="header-left">
+      <div class="tarq-monogram">
+        <span class="m-top">A /</span>
+        <span class="m-bot">R A</span>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#press" class="nav-link">Press</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="lang-switch">
+        <span class="lang active">EN</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Fixed Fullscreen Canvas Stage -->
+  <div id="stage">
+    <canvas id="canvas"></canvas>
+
+    <!-- Home Page Dark Cinematic Overlay (Fades out smoothly on scroll) -->
+    <div id="home-overlay" class="home-overlay">
+      <div class="home-hero-quadrants">
+        <!-- Center-Left: Year with subtle amber glow -->
+        <div class="quad-left">
+          <span class="meta-year">2026</span>
+        </div>
+
+        <!-- Dead Center: Project Title in Editorial Italic Serif -->
+        <div class="quad-center">
+          <h1 class="hero-editorial-title">( Aura Residences x Milan )</h1>
+        </div>
+
+        <!-- Center-Right: Project Link -->
+        <div class="quad-right">
+          <a href="#explore" class="hero-project-link">View Project</a>
+        </div>
+
+        <!-- Bottom-Left: Poetic Studio Statement in English -->
+        <div class="quad-bottom-left">
+          <p class="studio-statement">
+            AURA is an architectural and spatial design studio that understands each project as an experience to inhabit, not merely a finished structure.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Frame Resistance UI (Reveals on Last Frame of Video 1) -->
+    <div id="inspection-overlay" class="inspection-overlay">
+      <div class="inspection-left">
+        <span class="meta-year">2026</span>
+        <h2 class="inspection-title">( Aura Tower // 10 Levels )</h2>
+        <span class="inspection-sub">Residential Architecture</span>
+      </div>
+
+      <div class="inspection-bottom-left">
+        <p class="inspection-location">
+          Warsaw, str. Krasickiego • 45.71° N, 9.22° E<br>
+          Exposed architectural concrete structure and bioclimatic facade.
+        </p>
+      </div>
+    </div>
+
+    <!-- Interactive On-Building Floor Hover Layer (Exact 10 Residential Floors: 10 down to 1) -->
+    <div id="building-interaction-layer" class="building-interaction-layer">
+      <!-- 10 Exact Floors: Penthouse 10 down to Floor 1, canopy/ground excluded -->
+      <div id="floor-hitboxes" class="floor-hitboxes">
+        <div class="floor-hitbox" data-floor="10" data-label="( Penthouse 10 — 340 m² )"></div>
+        <div class="floor-hitbox" data-floor="9" data-label="( Floor 09 — 310 m² )"></div>
+        <div class="floor-hitbox" data-floor="8" data-label="( Floor 08 — 245 m² )"></div>
+        <div class="floor-hitbox" data-floor="7" data-label="( Floor 07 — 198 m² )"></div>
+        <div class="floor-hitbox" data-floor="6" data-label="( Floor 06 — 175 m² )"></div>
+        <div class="floor-hitbox" data-floor="5" data-label="( Floor 05 — 154 m² )"></div>
+        <div class="floor-hitbox" data-floor="4" data-label="( Floor 04 — 140 m² )"></div>
+        <div class="floor-hitbox" data-floor="3" data-label="( Floor 03 — 135 m² )"></div>
+        <div class="floor-hitbox" data-floor="2" data-label="( Floor 02 — 125 m² )"></div>
+        <div class="floor-hitbox" data-floor="1" data-label="( Floor 01 — 110 m² )"></div>
+      </div>
+
+      <!-- Glowing White & Orange Architectural Ribbon Band -->
+      <div id="floor-ribbon" class="floor-ribbon">
+        <div class="ribbon-glow"></div>
+        <div class="ribbon-flash"></div>
+        <span class="ribbon-corner tl"></span>
+        <span class="ribbon-corner tr"></span>
+        <span class="ribbon-corner bl"></span>
+        <span class="ribbon-corner br"></span>
+      </div>
+
+      <!-- Minimalist Luxury Editorial Floor Label (Floats beside hovered floor) -->
+      <div id="floor-spec-label" class="floor-spec-label">
+        <span class="spec-editorial-text" id="spec-editorial-text">( Floor 07 — 198 m² )</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Circular Badge with Rotating Text and Animated Mouse (Permanent in Corner) -->
+  <div id="scroll-prompt" class="scroll-prompt">
+    <svg class="circular-text-svg" viewBox="0 0 100 100">
+      <path id="circlePath" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
+      <text class="circular-text">
+        <textPath href="#circlePath" startOffset="0%">
+          • KEEP SCROLLING • KEEP SCROLLING •
+        </textPath>
+      </text>
+    </svg>
+
+    <div class="mouse-wrapper">
+      <div class="mouse-icon">
+        <div class="mouse-wheel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Track with 2 Dedicated Zones (Videos 1 & 2) -->
+  <div id="scroll-track">
+    <div id="section-1" class="scroll-zone"></div>
+    <div id="section-2" class="scroll-zone"></div>
+  </div>
+
+  <!-- Section 3: Interior Penthouse Residence (Slides up as full-size page, pins to top, scrubs Video 3) -->
+  <section id="section-3" class="interior-section">
+    <div class="interior-pinned-stage">
+      <canvas id="canvas-3"></canvas>
+
+      <!-- Minimalist Luxury Editorial Overlay for Section 3 -->
+      <div id="interior-overlay" class="interior-overlay">
+        <div class="interior-left">
+          <span class="meta-year">2026</span>
+          <h2 class="interior-title">( Penthouse Suite // Private Terrace & Living )</h2>
+          <span class="interior-sub">Natural Teak Paneling • Bespoke Living Spaces</span>
+        </div>
+
+        <div class="interior-bottom-left">
+          <p class="interior-statement">
+            Warsaw, str. Krasickiego • Private Terrace Suite<br>
+            A continuous dialogue between exterior facade architecture and intimate interior living spaces.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
