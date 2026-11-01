@@ -31,33 +31,33 @@
     </div>
   </div>
 
+  <!-- Persistent Top Navigation (TARQ Studio Inspired with Orange Ambient Glow) -->
+  <header id="tarq-header" class="tarq-header">
+    <div class="header-left">
+      <div class="tarq-monogram">
+        <span class="m-top">A /</span>
+        <span class="m-bot">R A</span>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#press" class="nav-link">Press</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="lang-switch">
+        <span class="lang active">EN</span>
+      </div>
+    </div>
+  </header>
+
   <!-- Fixed Fullscreen Canvas Stage -->
   <div id="stage">
     <canvas id="canvas"></canvas>
-
-    <!-- Persistent Top Navigation (TARQ Studio Inspired with Orange Ambient Glow) -->
-    <header id="tarq-header" class="tarq-header">
-      <div class="header-left">
-        <div class="tarq-monogram">
-          <span class="m-top">A /</span>
-          <span class="m-bot">R A</span>
-        </div>
-      </div>
-
-      <nav class="header-nav">
-        <a href="#about" class="nav-link">About</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#press" class="nav-link">Press</a>
-        <a href="#services" class="nav-link">Services</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </nav>
-
-      <div class="header-right">
-        <div class="lang-switch">
-          <span class="lang active">EN</span>
-        </div>
-      </div>
-    </header>
 
     <!-- Home Page Dark Cinematic Overlay (Fades out smoothly on scroll) -->
     <div id="home-overlay" class="home-overlay">
@@ -134,30 +134,54 @@
       </div>
     </div>
 
-    <!-- Circular Badge with Rotating Text and Animated Mouse (Permanent in Corner) -->
-    <div id="scroll-prompt" class="scroll-prompt">
-      <svg class="circular-text-svg" viewBox="0 0 100 100">
-        <path id="circlePath" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
-        <text class="circular-text">
-          <textPath href="#circlePath" startOffset="0%">
-            • KEEP SCROLLING • KEEP SCROLLING •
-          </textPath>
-        </text>
-      </svg>
+  </div>
 
-      <div class="mouse-wrapper">
-        <div class="mouse-icon">
-          <div class="mouse-wheel"></div>
-        </div>
+  <!-- Circular Badge with Rotating Text and Animated Mouse (Permanent in Corner) -->
+  <div id="scroll-prompt" class="scroll-prompt">
+    <svg class="circular-text-svg" viewBox="0 0 100 100">
+      <path id="circlePath" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
+      <text class="circular-text">
+        <textPath href="#circlePath" startOffset="0%">
+          • KEEP SCROLLING • KEEP SCROLLING •
+        </textPath>
+      </text>
+    </svg>
+
+    <div class="mouse-wrapper">
+      <div class="mouse-icon">
+        <div class="mouse-wheel"></div>
       </div>
     </div>
   </div>
 
-  <!-- Scroll Track with 2 Dedicated Zones -->
+  <!-- Scroll Track with 2 Dedicated Zones (Videos 1 & 2) -->
   <div id="scroll-track">
     <div id="section-1" class="scroll-zone"></div>
     <div id="section-2" class="scroll-zone"></div>
   </div>
+
+  <!-- Section 3: Interior Penthouse Residence (Slides up as full-size page, pins to top, scrubs Video 3) -->
+  <section id="section-3" class="interior-section">
+    <div class="interior-pinned-stage">
+      <canvas id="canvas-3"></canvas>
+
+      <!-- Minimalist Luxury Editorial Overlay for Section 3 -->
+      <div id="interior-overlay" class="interior-overlay">
+        <div class="interior-left">
+          <span class="meta-year">2026</span>
+          <h2 class="interior-title">( Penthouse Suite // Private Terrace & Living )</h2>
+          <span class="interior-sub">Natural Teak Paneling • Bespoke Living Spaces</span>
+        </div>
+
+        <div class="interior-bottom-left">
+          <p class="interior-statement">
+            Warsaw, str. Krasickiego • Private Terrace Suite<br>
+            A continuous dialogue between exterior facade architecture and intimate interior living spaces.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script type="module" src="/main.js"></script>
 </body>

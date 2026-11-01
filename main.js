@@ -24,6 +24,11 @@ const floorSpecLabel = document.getElementById('floor-spec-label');
 const specEditorialText = document.getElementById('spec-editorial-text');
 const floorHitboxes = document.querySelectorAll('.floor-hitbox');
 
+// Section 3 Elements (Interior Penthouse Residence)
+const canvas3 = document.getElementById('canvas-3');
+const ctx3 = canvas3.getContext('2d', { alpha: false });
+const interiorOverlay = document.getElementById('interior-overlay');
+
 // ----------------------------------------------------------------------------
 // EXACT MEASURED FLOOR BOUNDS ON 1920x1080 (FLOORS 10 DOWN TO 1)
 // ----------------------------------------------------------------------------
@@ -55,6 +60,11 @@ function updateLayout() {
   canvas.width = window.innerWidth * dpr;
   canvas.height = window.innerHeight * dpr;
 
+  if (canvas3) {
+    canvas3.width = window.innerWidth * dpr;
+    canvas3.height = window.innerHeight * dpr;
+  }
+
   const clientW = window.innerWidth;
   const clientH = window.innerHeight;
 
@@ -67,7 +77,7 @@ function updateLayout() {
   const shiftX = (clientW - renderW) / 2;
   const shiftY = (clientH - renderH) / 2;
 
-  // Watermark mask coordinates (Video 2)
+  // Watermark mask coordinates (Video 2 & Video 3)
   const markX = shiftX + (renderW * 0.906);
   const markY = shiftY + (renderH * 0.835);
 
@@ -94,6 +104,7 @@ function updateLayout() {
   highlightFloor(activeFloorNum, false);
 
   render();
+  renderInterior();
 }
 
 window.addEventListener('resize', updateLayout);
@@ -153,14 +164,16 @@ floorHitboxes.forEach((box) => {
 });
 
 // ----------------------------------------------------------------------------
-// 1080P ENHANCED FRAME PIPELINE WITH PRELOADER TRACKING
+// 1080P ENHANCED FRAME PIPELINE WITH PRELOADER TRACKING (VIDEOS 1, 2, 3)
 // ----------------------------------------------------------------------------
 const F1_COUNT = 302;
 const F2_COUNT = 240;
-const TOTAL_FRAMES = F1_COUNT + F2_COUNT;
+const F3_COUNT = 240;
+const TOTAL_FRAMES = F1_COUNT + F2_COUNT + F3_COUNT;
 
 const frames1 = [];
 const frames2 = [];
+const frames3 = [];
 
 function pad(num, size = 4) {
   let s = num + '';
@@ -204,6 +217,7 @@ function completePreloader() {
   if (preloaderPercent) preloaderPercent.textContent = '100%';
 
   render();
+  renderInterior();
 
   setTimeout(() => {
     if (preloader) {
@@ -218,10 +232,13 @@ function completePreloader() {
   }, 350);
 }
 
-function onFrameFinished(i, isF1) {
+function onFrameFinished(i, tag) {
   loadedCount++;
-  if (isF1 && i === 1) {
+  if (tag === 'f1' && i === 1) {
     render();
+  }
+  if (tag === 'f3' && i === 1) {
+    renderInterior();
   }
   const realPercent = Math.min(100, Math.floor((loadedCount / TOTAL_FRAMES) * 100));
   updateLoaderProgress(realPercent);
@@ -230,17 +247,25 @@ function onFrameFinished(i, isF1) {
 for (let i = 1; i <= F1_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames1/frame_${pad(i)}.jpg`;
-  img.onload = () => onFrameFinished(i, true);
-  img.onerror = () => onFrameFinished(i, true);
+  img.onload = () => onFrameFinished(i, 'f1');
+  img.onerror = () => onFrameFinished(i, 'f1');
   frames1.push(img);
 }
 
 for (let i = 1; i <= F2_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames2/frame_${pad(i)}.jpg`;
-  img.onload = () => onFrameFinished(i, false);
-  img.onerror = () => onFrameFinished(i, false);
+  img.onload = () => onFrameFinished(i, 'f2');
+  img.onerror = () => onFrameFinished(i, 'f2');
   frames2.push(img);
+}
+
+for (let i = 1; i <= F3_COUNT; i++) {
+  const img = new Image();
+  img.src = `${BASE}/frames3/frame_${pad(i)}.jpg`;
+  img.onload = () => onFrameFinished(i, 'f3');
+  img.onerror = () => onFrameFinished(i, 'f3');
+  frames3.push(img);
 }
 
 // Fallback safety: ensures unlock even if remote network delays a single frame
@@ -265,11 +290,11 @@ function getLoadedFrame(list, targetIdx) {
 // ----------------------------------------------------------------------------
 // MIRRORED EDGE REPEAT RENDERER (NO BLACK BARS, NATURAL LIGHT)
 // ----------------------------------------------------------------------------
-function drawMirroredEdgesAndCenter(img, alpha = 1.0) {
+function drawMirroredEdgesAndCenter(img, alpha = 1.0, targetCtx = ctx, targetCanvas = canvas) {
   if (!img || !img.complete || img.naturalWidth === 0) return;
 
-  const canvasW = canvas.width;
-  const canvasH = canvas.height;
+  const canvasW = targetCanvas.width;
+  const canvasH = targetCanvas.height;
   const imgW = img.naturalWidth;
   const imgH = img.naturalHeight;
 
@@ -282,31 +307,31 @@ function drawMirroredEdgesAndCenter(img, alpha = 1.0) {
   const shiftX = (canvasW - renderW) / 2;
   const shiftY = (canvasH - renderH) / 2;
 
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
+  targetCtx.save();
+  targetCtx.globalAlpha = alpha;
+  targetCtx.imageSmoothingEnabled = true;
+  targetCtx.imageSmoothingQuality = 'high';
 
   // Fill side blank spaces by repeating / mirroring the edge pixels
   if (shiftX > 0) {
     // Left edge repeat (mirrored reflection of sky, trees, and daylight)
-    ctx.save();
-    ctx.translate(shiftX, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(img, 0, 0, imgW * 0.35, imgH, 0, shiftY, shiftX, renderH);
-    ctx.restore();
+    targetCtx.save();
+    targetCtx.translate(shiftX, 0);
+    targetCtx.scale(-1, 1);
+    targetCtx.drawImage(img, 0, 0, imgW * 0.35, imgH, 0, shiftY, shiftX, renderH);
+    targetCtx.restore();
 
     // Right edge repeat (mirrored reflection)
-    ctx.save();
-    ctx.translate(canvasW - shiftX, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(img, imgW * 0.65, 0, imgW * 0.35, imgH, -shiftX, shiftY, shiftX, renderH);
-    ctx.restore();
+    targetCtx.save();
+    targetCtx.translate(canvasW - shiftX, 0);
+    targetCtx.scale(-1, 1);
+    targetCtx.drawImage(img, imgW * 0.65, 0, imgW * 0.35, imgH, -shiftX, shiftY, shiftX, renderH);
+    targetCtx.restore();
   }
 
   // Draw Crisp Center Frame
-  ctx.drawImage(img, shiftX, shiftY, renderW, renderH);
-  ctx.restore();
+  targetCtx.drawImage(img, shiftX, shiftY, renderW, renderH);
+  targetCtx.restore();
 }
 
 // ----------------------------------------------------------------------------
@@ -578,6 +603,45 @@ ScrollTrigger.create({
     }
   }
 });
+// ----------------------------------------------------------------------------
+// SECTION 3: INTERIOR PENTHOUSE RESIDENCE RENDERER & SCROLLTRIGGER
+// ----------------------------------------------------------------------------
+let currentFrame3Idx = 0;
+
+function renderInterior() {
+  if (!canvas3) return;
+  ctx3.fillStyle = '#06080b';
+  ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+
+  const frame = getLoadedFrame(frames3, currentFrame3Idx);
+  if (frame) {
+    drawMirroredEdgesAndCenter(frame, 1.0, ctx3, canvas3);
+  }
+}
+
+ScrollTrigger.create({
+  trigger: '#section-3',
+  start: 'top top',
+  end: 'bottom bottom',
+  pin: '.interior-pinned-stage',
+  pinSpacing: true,
+  scrub: true,
+  onUpdate: (self) => {
+    const p = self.progress;
+    currentFrame3Idx = Math.min(F3_COUNT - 1, Math.floor(p * (F3_COUNT - 1)));
+
+    // Subtle fadeout of editorial headline as user moves deeper into the room
+    if (p > 0.35) {
+      const alpha = Math.max(0, 1 - ((p - 0.35) / 0.25));
+      if (interiorOverlay) interiorOverlay.style.opacity = alpha;
+    } else {
+      if (interiorOverlay) interiorOverlay.style.opacity = '1';
+    }
+
+    renderInterior();
+  }
+});
 
 // Initial layout & frame paint
 updateLayout();
+
