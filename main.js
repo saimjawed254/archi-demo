@@ -193,7 +193,7 @@ floorHitboxes.forEach((box) => {
 // ----------------------------------------------------------------------------
 const F1_COUNT = 151;
 const F2_COUNT = 120;
-const F3_COUNT = 289;
+const F3_COUNT = 390;
 const TOTAL_FRAMES = F1_COUNT + F2_COUNT + F3_COUNT;
 
 const frames1 = [];
@@ -813,13 +813,13 @@ ScrollTrigger.create({
       }
 
       // Dynamic zone transitions matching physical room camera positions
-      if (scrubT < 0.25) {
-        updateRoomDetails(1); // 01 Terrace
-      } else if (scrubT < 0.42) {
+      if (scrubT < 0.20) {
+        updateRoomDetails(1); // 01 Terrace / Balcony
+      } else if (scrubT < 0.44) {
         updateRoomDetails(2); // 02 Grand Salon
-      } else if (scrubT < 0.59) {
+      } else if (scrubT < 0.62) {
         updateRoomDetails(3); // 03 East Panorama Suite (Video 4 fwd)
-      } else if (scrubT < 0.75) {
+      } else if (scrubT < 0.80) {
         updateRoomDetails(4); // 04 Salon Foyer return (Video 4 rev)
       } else {
         updateRoomDetails(5); // 05 Sculptural Dining Suite (Video 5 fwd)
