@@ -24,10 +24,17 @@ const floorSpecLabel = document.getElementById('floor-spec-label');
 const specEditorialText = document.getElementById('spec-editorial-text');
 const floorHitboxes = document.querySelectorAll('.floor-hitbox');
 
-// Section 3 Elements (Interior Penthouse Residence)
+// Section 3 Elements (Interior Penthouse Residence & Growing Video)
 const canvas3 = document.getElementById('canvas-3');
 const ctx3 = canvas3.getContext('2d', { alpha: false });
-const interiorOverlay = document.getElementById('interior-overlay');
+const interiorIntroView = document.getElementById('interior-intro-view');
+const interiorHud = document.getElementById('interior-hud');
+const minimapBeaconGroup = document.getElementById('minimap-beacon-group');
+const minimapZoneText = document.getElementById('minimap-zone-text');
+const roomEyebrow = document.getElementById('room-eyebrow');
+const roomTitle = document.getElementById('room-title');
+const roomDesc = document.getElementById('room-desc');
+const interiorRoomCard = document.getElementById('interior-room-card');
 
 // ----------------------------------------------------------------------------
 // EXACT MEASURED FLOOR BOUNDS ON 1920x1080 (FLOORS 10 DOWN TO 1)
@@ -55,6 +62,11 @@ let activeFloorNum = 7;
 // ----------------------------------------------------------------------------
 // HIGH-DPI CANVAS & EXACT RESPONSIVE ALIGNMENT
 // ----------------------------------------------------------------------------
+let coverW3 = 1920;
+let coverH3 = 1080;
+let coverShiftX3 = 0;
+let coverShiftY3 = 0;
+
 function updateLayout() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = window.innerWidth * dpr;
@@ -63,6 +75,11 @@ function updateLayout() {
   if (canvas3) {
     canvas3.width = window.innerWidth * dpr;
     canvas3.height = window.innerHeight * dpr;
+    const scale3 = Math.max(canvas3.width / 1920, canvas3.height / 1080);
+    coverW3 = 1920 * scale3;
+    coverH3 = 1080 * scale3;
+    coverShiftX3 = (canvas3.width - coverW3) / 2;
+    coverShiftY3 = (canvas3.height - coverH3) / 2;
   }
 
   const clientW = window.innerWidth;
@@ -84,6 +101,14 @@ function updateLayout() {
   scrollPrompt.style.left = `${markX}px`;
   scrollPrompt.style.top = `${markY}px`;
   scrollPrompt.classList.add('visible');
+
+  // Position Liquid Glass Room Info Card safely 24px to the left of the scroll sticker
+  if (interiorRoomCard) {
+    const badgeLeft = markX - 48; // Left edge of 96px circular badge
+    const rightDist = Math.max(20, (clientW - badgeLeft) + 24);
+    interiorRoomCard.style.right = `${rightDist}px`;
+    interiorRoomCard.style.bottom = `${Math.max(24, clientH - markY - 36)}px`;
+  }
 
   // Align 10 floor hitboxes directly over the physical building facade
   const towerLeft = shiftX + (renderW * TOWER_LEFT_NORM);
@@ -168,7 +193,7 @@ floorHitboxes.forEach((box) => {
 // ----------------------------------------------------------------------------
 const F1_COUNT = 151;
 const F2_COUNT = 120;
-const F3_COUNT = 145;
+const F3_COUNT = 289;
 const TOTAL_FRAMES = F1_COUNT + F2_COUNT + F3_COUNT;
 
 const frames1 = [];
@@ -247,7 +272,13 @@ function onFrameFinished(i, tag) {
 for (let i = 1; i <= F1_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames1/frame_${pad(i)}.webp`;
-  img.onload = () => onFrameFinished(i, 'f1');
+  img.onload = () => {
+    if (img.decode) {
+      img.decode().catch(() => {}).finally(() => onFrameFinished(i, 'f1'));
+    } else {
+      onFrameFinished(i, 'f1');
+    }
+  };
   img.onerror = () => onFrameFinished(i, 'f1');
   frames1.push(img);
 }
@@ -255,7 +286,13 @@ for (let i = 1; i <= F1_COUNT; i++) {
 for (let i = 1; i <= F2_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames2/frame_${pad(i)}.webp`;
-  img.onload = () => onFrameFinished(i, 'f2');
+  img.onload = () => {
+    if (img.decode) {
+      img.decode().catch(() => {}).finally(() => onFrameFinished(i, 'f2'));
+    } else {
+      onFrameFinished(i, 'f2');
+    }
+  };
   img.onerror = () => onFrameFinished(i, 'f2');
   frames2.push(img);
 }
@@ -263,7 +300,13 @@ for (let i = 1; i <= F2_COUNT; i++) {
 for (let i = 1; i <= F3_COUNT; i++) {
   const img = new Image();
   img.src = `${BASE}/frames3/frame_${pad(i)}.webp`;
-  img.onload = () => onFrameFinished(i, 'f3');
+  img.onload = () => {
+    if (img.decode) {
+      img.decode().catch(() => {}).finally(() => onFrameFinished(i, 'f3'));
+    } else {
+      onFrameFinished(i, 'f3');
+    }
+  };
   img.onerror = () => onFrameFinished(i, 'f3');
   frames3.push(img);
 }
@@ -621,20 +664,66 @@ ScrollTrigger.create({
   }
 });
 // ----------------------------------------------------------------------------
-// SECTION 3: INTERIOR PENTHOUSE RESIDENCE RENDERER & SCROLLTRIGGER
+// SECTION 3: EXPANDING ROUNDED CARD & IN-RESIDENCE LIQUID GLASS HUD
+// ----------------------------------------------------------------------------
+// SECTION 3: CAPSULE-SHAPED RESIDENCE REVEAL & MULTI-ZONE SCRUB (3, 4, 4-REV, 5)
 // ----------------------------------------------------------------------------
 let currentFrame3Idx = 0;
+let lastRoomZone = -1;
+
+function updateRoomDetails(zone) {
+  if (zone === lastRoomZone) return;
+  lastRoomZone = zone;
+
+  if (zone === 1) {
+    if (minimapBeaconGroup) minimapBeaconGroup.setAttribute('transform', 'translate(42, 40)');
+    if (minimapZoneText) minimapZoneText.textContent = 'Zone: Outdoor Sky Terrace';
+    if (roomEyebrow) roomEyebrow.textContent = '01 // RESIDENTIAL SUITE';
+    if (roomTitle) roomTitle.textContent = 'Private Terrace & Sky Garden';
+    if (roomDesc) roomDesc.textContent = 'Natural teak vertical battens, honed anthracite flagstones, and architectural climbing flora overlooking the Milan skyline.';
+  } else if (zone === 2) {
+    if (minimapBeaconGroup) minimapBeaconGroup.setAttribute('transform', 'translate(78, 44)');
+    if (minimapZoneText) minimapZoneText.textContent = 'Zone: Grand Salon & Foyer';
+    if (roomEyebrow) roomEyebrow.textContent = '02 // LIVING QUARTERS';
+    if (roomTitle) roomTitle.textContent = 'The Grand Salon & Chandelier';
+    if (roomDesc) roomDesc.textContent = 'Expansive full-height glazing transitioning into bespoke walnut joinery and custom glass sphere chandelier illumination.';
+  } else if (zone === 3) {
+    if (minimapBeaconGroup) minimapBeaconGroup.setAttribute('transform', 'translate(132, 40)');
+    if (minimapZoneText) minimapZoneText.textContent = 'Zone: East Panorama Balcony';
+    if (roomEyebrow) roomEyebrow.textContent = '03 // EAST RESIDENCE';
+    if (roomTitle) roomTitle.textContent = 'East Panorama Suite & Balcony';
+    if (roomDesc) roomDesc.textContent = 'Bioclimatic glass balcony and private executive salon offering sweeping panoramic vistas towards the sunrise.';
+  } else if (zone === 4) {
+    if (minimapBeaconGroup) minimapBeaconGroup.setAttribute('transform', 'translate(78, 44)');
+    if (minimapZoneText) minimapZoneText.textContent = 'Zone: Salon Central Foyer';
+    if (roomEyebrow) roomEyebrow.textContent = '04 // CENTRAL FOYER';
+    if (roomTitle) roomTitle.textContent = 'Salon Foyer & North Promenade';
+    if (roomDesc) roomDesc.textContent = 'Returning through the central salon axis towards the north culinary wing and private dining pavilion.';
+  } else if (zone === 5) {
+    if (minimapBeaconGroup) minimapBeaconGroup.setAttribute('transform', 'translate(117, 72)');
+    if (minimapZoneText) minimapZoneText.textContent = 'Zone: Dining Salon & Sculptural Stoneware';
+    if (roomEyebrow) roomEyebrow.textContent = '05 // BESPOKE INTERIOR';
+    if (roomTitle) roomTitle.textContent = 'Sculptural Marble Dining Suite';
+    if (roomDesc) roomDesc.textContent = 'Nero Marquina marble table with handcrafted stoneware vases, rounded bouclé armchairs, and minimalist architectural wall art.';
+  }
+}
+
+let lastRenderedFrame3 = -1;
 
 function renderInterior() {
   if (!canvas3) return;
-  ctx3.fillStyle = '#06080b';
-  ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
-
   const frame = getLoadedFrame(frames3, currentFrame3Idx);
-  if (frame) {
-    drawMirroredEdgesAndCenter(frame, 1.0, ctx3, canvas3);
-  }
+  if (!frame || !frame.complete || frame.naturalWidth === 0) return;
+
+  // Ultra-fast draw using precomputed cover coordinates (zero layout or math overhead)
+  ctx3.drawImage(frame, coverShiftX3, coverShiftY3, coverW3, coverH3);
+  lastRenderedFrame3 = currentFrame3Idx;
 }
+
+const easeInOut = gsap.parseEase('power2.inOut');
+let lastScaleVal = -1;
+let lastRadiusVal = -1;
+let lastInsetVal = -1;
 
 ScrollTrigger.create({
   trigger: '#section-3',
@@ -645,17 +734,97 @@ ScrollTrigger.create({
   scrub: true,
   onUpdate: (self) => {
     const p = self.progress;
-    currentFrame3Idx = Math.min(F3_COUNT - 1, Math.floor(p * (F3_COUNT - 1)));
+    const isMobile = window.innerWidth <= 768;
+    const startScale = isMobile ? 0.78 : 0.50;
+    const baseInsetX = isMobile ? 6 : 9;
 
-    // Subtle fadeout of editorial headline as user moves deeper into the room
-    if (p > 0.35) {
-      const alpha = Math.max(0, 1 - ((p - 0.35) / 0.25));
-      if (interiorOverlay) interiorOverlay.style.opacity = alpha;
+    // ------------------------------------------------------------------------
+    // PHASE 1: COMPACT CAPSULE EXPANDS TO FULL SCREEN (0.0 to 0.16)
+    // ------------------------------------------------------------------------
+    if (p <= 0.16) {
+      const expandT = Math.min(1.0, Math.max(0, p / 0.16));
+      const easeT = easeInOut(expandT);
+
+      const curScale = startScale + ((1.0 - startScale) * easeT);
+      const curInsetX = baseInsetX * (1 - easeT);
+      const curRadiusVh = 50 * (1 - easeT);
+
+      // 100% GPU-accelerated compositor transform (0 layout reflows)
+      if (Math.abs(curScale - lastScaleVal) > 0.0004) {
+        lastScaleVal = curScale;
+        canvas3.style.transform = `translate(-50%, -50%) scale(${curScale.toFixed(4)})`;
+      }
+
+      if (Math.abs(curRadiusVh - lastRadiusVal) > 0.1 || Math.abs(curInsetX - lastInsetVal) > 0.05) {
+        lastRadiusVal = curRadiusVh;
+        lastInsetVal = curInsetX;
+        if (easeT >= 0.98 || curRadiusVh <= 0.5) {
+          canvas3.style.clipPath = 'none';
+          canvas3.style.borderRadius = '0px';
+        } else {
+          canvas3.style.clipPath = `inset(0 ${curInsetX.toFixed(2)}vw 0 ${curInsetX.toFixed(2)}vw round ${curRadiusVh.toFixed(2)}vh)`;
+          canvas3.style.borderRadius = `${curRadiusVh.toFixed(1)}vh`;
+        }
+      }
+
+      // Editorial whitespace text smoothly fades away
+      const textAlpha = Math.max(0, 1 - (expandT * 1.5));
+      interiorIntroView.style.opacity = textAlpha.toFixed(3);
+
+      // Keep HUD hidden during expansion
+      if (interiorHud.classList.contains('active')) {
+        interiorHud.classList.remove('active');
+      }
+
+      // Keep video on frame 0 thumbnail
+      if (currentFrame3Idx !== 0 || lastRenderedFrame3 !== 0) {
+        currentFrame3Idx = 0;
+        updateRoomDetails(1);
+        renderInterior();
+      }
+
     } else {
-      if (interiorOverlay) interiorOverlay.style.opacity = '1';
-    }
+      // ------------------------------------------------------------------------
+      // PHASE 2: FULL-SIZE IN-RESIDENCE VIDEO SCRUB & LIQUID GLASS HUD (0.16 to 1.0)
+      // ------------------------------------------------------------------------
+      if (lastScaleVal !== 1.0) {
+        lastScaleVal = 1.0;
+        lastRadiusVal = 0;
+        lastInsetVal = 0;
+        canvas3.style.transform = 'translate(-50%, -50%) scale(1)';
+        canvas3.style.clipPath = 'none';
+        canvas3.style.borderRadius = '0px';
+      }
 
-    renderInterior();
+      interiorIntroView.style.opacity = '0';
+
+      // Reveal in-residence HUD (Minimap and Room Info Card)
+      if (!interiorHud.classList.contains('active')) {
+        interiorHud.classList.add('active');
+      }
+
+      // Scrub through Video 3 -> 4 -> 4(rev) -> 5 sequence across extended 546vh runway
+      const scrubT = (p - 0.16) / 0.84;
+      const targetFrame = Math.min(F3_COUNT - 1, Math.floor(scrubT * (F3_COUNT - 1)));
+
+      if (targetFrame !== currentFrame3Idx) {
+        currentFrame3Idx = targetFrame;
+        renderInterior();
+      }
+
+      // Dynamic zone transitions matching physical room camera positions
+      if (scrubT < 0.25) {
+        updateRoomDetails(1); // 01 Terrace
+      } else if (scrubT < 0.42) {
+        updateRoomDetails(2); // 02 Grand Salon
+      } else if (scrubT < 0.59) {
+        updateRoomDetails(3); // 03 East Panorama Suite (Video 4 fwd)
+      } else if (scrubT < 0.75) {
+        updateRoomDetails(4); // 04 Salon Foyer return (Video 4 rev)
+      } else {
+        updateRoomDetails(5); // 05 Sculptural Dining Suite (Video 5 fwd)
+      }
+    }
   }
 });
 

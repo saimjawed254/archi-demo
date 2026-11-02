@@ -160,26 +160,125 @@
     <div id="section-2" class="scroll-zone"></div>
   </div>
 
-  <!-- Section 3: Interior Penthouse Residence (Slides up as full-size page, pins to top, scrubs Video 3) -->
+  <!-- Section 3: Interior Penthouse Residence (Expands from centered rounded card to full screen) -->
   <section id="section-3" class="interior-section">
     <div class="interior-pinned-stage">
-      <canvas id="canvas-3"></canvas>
 
-      <!-- Minimalist Luxury Editorial Overlay for Section 3 -->
-      <div id="interior-overlay" class="interior-overlay">
-        <div class="interior-left">
+      <!-- Premium Editorial Background Content (Visible in whitespace when card is centered and small) -->
+      <div id="interior-intro-view" class="interior-intro-view">
+        <div class="intro-header">
           <span class="meta-year">2026</span>
-          <h2 class="interior-title">( Penthouse Suite // Private Terrace & Living )</h2>
-          <span class="interior-sub">Natural Teak Paneling • Bespoke Living Spaces</span>
+          <h2 class="intro-chapter">( Architectural Collection // Volume 03 )</h2>
+          <span class="intro-tag">Milan • 45.71° N</span>
         </div>
 
-        <div class="interior-bottom-left">
-          <p class="interior-statement">
-            Warsaw, str. Krasickiego • Private Terrace Suite<br>
-            A continuous dialogue between exterior facade architecture and intimate interior living spaces.
+        <div class="intro-flank left">
+          <span class="intro-numeral">03 / RESIDENTIAL SUITE</span>
+          <h3 class="intro-flank-title">Level 10<br><em>Penthouse Suite</em></h3>
+          <p class="intro-flank-desc">
+            Direct elevator foyer transitioning into an open-air sky terrace with floor-to-ceiling bioclimatic glazing.
           </p>
         </div>
+
+        <div class="intro-flank right">
+          <div class="intro-spec-item">
+            <span class="spec-label">Gross Floor Area</span>
+            <span class="spec-value">340 m² // 3,660 sq ft</span>
+          </div>
+          <div class="intro-spec-item">
+            <span class="spec-label">Ceiling Elevation</span>
+            <span class="spec-value">3.40 m Clear Height</span>
+          </div>
+          <div class="intro-spec-item">
+            <span class="spec-label">Atmosphere</span>
+            <span class="spec-value">South-East Dawn Light</span>
+          </div>
+          <div class="intro-spec-item">
+            <span class="spec-label">Materiality</span>
+            <span class="spec-value">Natural Teak & Nero Marquina</span>
+          </div>
+        </div>
+
+        <div class="intro-bottom-prompt">
+          <span class="intro-scroll-hint">• Scroll to expand residence •</span>
+        </div>
       </div>
+
+      <!-- Video Canvas 3: Frameless rounded rectangle in the center, grows to cover entire screen -->
+      <canvas id="canvas-3"></canvas>
+
+      <!-- In-Residence Fullscreen HUD (Appears when card reaches full page) -->
+      <div id="interior-hud" class="interior-hud">
+        
+        <!-- Architectural Minimap (Bottom-Left in Liquid Glass Effect) -->
+        <div id="interior-minimap-card" class="interior-minimap-card liquid-glass">
+          <div class="minimap-header">
+            <span class="minimap-level">PENTHOUSE // LEVEL 10</span>
+            <span class="minimap-live-badge"><span class="beacon-pulse"></span>ACTIVE VIEW</span>
+          </div>
+
+          <div class="minimap-blueprint">
+            <svg viewBox="0 0 170 115" class="minimap-svg">
+              <!-- Outer Flat Footprint -->
+              <rect x="8" y="8" width="154" height="99" rx="4" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-dasharray="3,3" />
+
+              <!-- Outdoor Terrace (Left) -->
+              <rect x="14" y="14" width="56" height="52" fill="rgba(255,157,0,0.08)" stroke="rgba(255,157,0,0.45)" stroke-width="1.2" />
+              <text x="20" y="27" class="map-tag">TERRACE</text>
+              <line x1="70" y1="14" x2="70" y2="66" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-dasharray="2,2" />
+
+              <!-- Dining & Salon (Right) -->
+              <rect x="70" y="14" width="86" height="87" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
+              <text x="78" y="27" class="map-tag">DINING SALON</text>
+
+              <!-- Dining Table Graphic -->
+              <rect x="94" y="44" width="46" height="26" rx="3" fill="rgba(255,255,255,0.08)" stroke="rgba(255,157,0,0.55)" stroke-width="1.2" />
+              <!-- Table Chairs -->
+              <circle cx="103" cy="38" r="3" fill="rgba(255,255,255,0.3)" />
+              <circle cx="117" cy="38" r="3" fill="rgba(255,255,255,0.3)" />
+              <circle cx="131" cy="38" r="3" fill="rgba(255,255,255,0.3)" />
+              <circle cx="103" cy="76" r="3" fill="rgba(255,255,255,0.3)" />
+              <circle cx="117" cy="76" r="3" fill="rgba(255,255,255,0.3)" />
+              <circle cx="131" cy="76" r="3" fill="rgba(255,255,255,0.3)" />
+
+              <!-- Private Master Suites (Bottom Left) -->
+              <rect x="14" y="66" width="56" height="35" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.18)" stroke-width="1" />
+              <text x="20" y="80" class="map-tag">SUITES</text>
+
+              <!-- Dynamic Animated Camera Beacon -->
+              <g id="minimap-beacon-group" class="minimap-beacon-group" transform="translate(42, 40)">
+                <circle cx="0" cy="0" r="4.5" fill="#ff9d00" class="beacon-dot" />
+                <circle cx="0" cy="0" r="10" fill="none" stroke="#ffaa22" stroke-width="1" class="beacon-wave" />
+                <!-- Directional View Cone -->
+                <path d="M 0 0 L 22 14 L 22 -14 Z" fill="url(#coneGlow)" />
+                <defs>
+                  <linearGradient id="coneGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="rgba(255, 157, 0, 0.45)" />
+                    <stop offset="100%" stop-color="rgba(255, 157, 0, 0)" />
+                  </linearGradient>
+                </defs>
+              </g>
+            </svg>
+          </div>
+
+          <div class="minimap-footer">
+            <span id="minimap-zone-text" class="minimap-zone-text">Zone: Outdoor Sky Terrace</span>
+          </div>
+        </div>
+
+        <!-- Room Information Card (Bottom-Right, Liquid Glass effect positioned safely beside scroll sticker) -->
+        <div id="interior-room-card" class="interior-room-card liquid-glass">
+          <div class="room-card-inner">
+            <span class="room-eyebrow" id="room-eyebrow">01 // RESIDENTIAL SUITE</span>
+            <h3 class="room-title" id="room-title">Private Terrace & Sky Garden</h3>
+            <p class="room-desc" id="room-desc">
+              Natural teak vertical battens, honed anthracite flagstones, and architectural climbing flora overlooking the Milan skyline.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </section>
 

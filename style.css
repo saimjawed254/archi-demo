@@ -632,13 +632,13 @@ html, body {
 }
 
 /* ==========================================================================
-   SECTION 3: INTERIOR PENTHOUSE RESIDENCE (SLIDES UP & PINS TO TOP)
+   SECTION 3: EXPANDING ROUNDED CARD & IN-RESIDENCE LIQUID GLASS HUD
    ========================================================================== */
 
 .interior-section {
   position: relative;
   width: 100%;
-  height: 300vh;
+  height: 750vh;
   z-index: 60;
   background: #06080b;
 }
@@ -651,70 +651,334 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #06080b;
+  background: radial-gradient(circle at center, #0e121a 0%, #06080b 100%);
 }
 
-#canvas-3 {
-  width: 100vw;
-  height: 100vh;
-  display: block;
-}
-
-.interior-overlay {
+/* --------------------------------------------------------------------------
+   PREMIUM EDITORIAL BACKGROUND (Visible in whitespace around card)
+   -------------------------------------------------------------------------- */
+.interior-intro-view {
   position: absolute;
   inset: 0;
-  padding: 6rem 4rem 3.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   pointer-events: none;
-  z-index: 20;
+  z-index: 10;
   opacity: 1;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s ease;
 }
 
-.interior-left {
+.intro-header {
   position: absolute;
-  top: 48%;
+  top: 6rem;
   left: 4rem;
+  right: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.intro-chapter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-shadow: 0 0 16px rgba(255, 157, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+.intro-tag {
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.6);
+}
+
+.intro-flank {
+  position: absolute;
+  top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  max-width: 580px;
+  gap: 0.6rem;
 }
 
-.interior-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-style: italic;
-  font-size: 2.2rem;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  color: #ffffff;
-  text-shadow: 0 0 18px rgba(255, 157, 0, 0.85), 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
-}
-
-.interior-sub {
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: #ffffff;
-  text-shadow: 0 0 12px rgba(255, 157, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.95);
-}
-
-.interior-bottom-left {
-  position: absolute;
-  bottom: 3.5rem;
+.intro-flank.left {
   left: 4rem;
-  max-width: 460px;
+  max-width: 320px;
 }
 
-.interior-statement {
+.intro-numeral {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #ffaa22;
+  text-shadow: 0 0 12px rgba(255, 157, 0, 0.85);
+}
+
+.intro-flank-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(255, 157, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+.intro-flank-title em {
+  font-style: italic;
+  color: #ffc466;
+}
+
+.intro-flank-desc {
   font-size: 0.78rem;
   font-weight: 300;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.95);
-  text-shadow: 0 0 12px rgba(255, 157, 0, 0.65), 0 2px 8px rgba(0, 0, 0, 0.95);
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+.intro-flank.right {
+  right: 4rem;
+  max-width: 290px;
+  gap: 1.1rem;
+}
+
+.intro-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.spec-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.spec-value {
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255, 157, 0, 0.65);
+}
+
+.intro-bottom-prompt {
+  position: absolute;
+  bottom: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.intro-scroll-hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 14px rgba(255, 157, 0, 0.8);
+  animation: pulseMonogram 2.2s infinite ease-in-out;
+}
+
+/* --------------------------------------------------------------------------
+   VIDEO CANVAS 3: FRAMELESS ROUNDED RECTANGLE GROWING TO FULL PAGE
+   -------------------------------------------------------------------------- */
+#canvas-3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.50);
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 15;
+  pointer-events: none;
+  border-radius: 50vh;
+  clip-path: inset(0 9vw 0 9vw round 50vh);
+  will-change: transform, clip-path, border-radius;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-origin: center center;
+}
+
+/* --------------------------------------------------------------------------
+   LIQUID GLASS EFFECT SPECIFICATION
+   -------------------------------------------------------------------------- */
+.liquid-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(10, 14, 22, 0.75) 100%);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 157, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  transform: translateZ(0);
+}
+
+/* --------------------------------------------------------------------------
+   IN-RESIDENCE FULLSCREEN HUD (Minimap & Room Info)
+   -------------------------------------------------------------------------- */
+.interior-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interior-hud.active {
+  opacity: 1;
+}
+
+/* 1. Architectural Minimap (Bottom-Left) */
+.interior-minimap-card {
+  position: absolute;
+  bottom: 3.5rem;
+  left: 4rem;
+  width: 240px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.minimap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.minimap-level {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.6);
+}
+
+.minimap-live-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #ffaa22;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.beacon-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffaa22;
+  box-shadow: 0 0 8px #ff9d00;
+  animation: radarPulse 1.8s infinite ease-out;
+}
+
+@keyframes radarPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0.9); }
+  70% { box-shadow: 0 0 0 8px rgba(255, 157, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 157, 0, 0); }
+}
+
+.minimap-blueprint {
+  width: 100%;
+  height: 95px;
+  background: rgba(6, 8, 12, 0.45);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.minimap-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.map-tag {
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  fill: rgba(255, 255, 255, 0.65);
+}
+
+.minimap-beacon-group {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.beacon-wave {
+  animation: beaconExpand 2s infinite ease-out;
+  transform-origin: center center;
+}
+
+@keyframes beaconExpand {
+  0% { r: 5; opacity: 1; }
+  100% { r: 14; opacity: 0; }
+}
+
+.minimap-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.minimap-zone-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.7);
+}
+
+/* 2. Room Information Card (Bottom-Right, Liquid Glass effect positioned safely beside scroll sticker) */
+.interior-room-card {
+  position: absolute;
+  bottom: 3.5rem;
+  right: 140px; /* Overridden dynamically in JS to sit exactly 24px left of scroll sticker */
+  max-width: 360px;
+  padding: 16px 20px;
+  pointer-events: auto;
+}
+
+.room-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.room-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #ffaa22;
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.8);
+}
+
+.room-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 0 16px rgba(255, 157, 0, 0.85), 0 2px 8px rgba(0, 0, 0, 0.95);
+  margin-top: 2px;
+}
+
+.room-desc {
+  font-size: 0.76rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
 }
 
 /* ==========================================================================
@@ -728,10 +992,13 @@ html, body {
   .inspection-left { left: 2rem; }
   .inspection-bottom-left { left: 2rem; }
   .hero-editorial-title { font-size: 2rem; }
-  .interior-overlay { padding: 5rem 2rem 2.5rem 2rem; }
-  .interior-left { left: 2rem; }
-  .interior-bottom-left { left: 2rem; }
-  .interior-title { font-size: 1.8rem; }
+  
+  .intro-header { left: 2rem; right: 2rem; top: 5rem; }
+  .intro-flank.left { left: 2rem; max-width: 260px; }
+  .intro-flank.right { right: 2rem; max-width: 240px; }
+  .intro-flank-title { font-size: 1.7rem; }
+  .interior-minimap-card { left: 2rem; bottom: 2rem; width: 210px; }
+  .interior-room-card { bottom: 2rem; max-width: 300px; }
 }
 
 @media (max-width: 768px) {
@@ -739,6 +1006,10 @@ html, body {
   .hero-editorial-title { font-size: 1.6rem; }
   .studio-statement { font-size: 0.75rem; }
   .quad-bottom-left { grid-column: 1 / span 3; }
-  .interior-title { font-size: 1.45rem; }
-  .interior-statement { font-size: 0.75rem; }
+  
+  .intro-header { top: 4.5rem; flex-direction: column; gap: 0.4rem; text-align: center; }
+  .intro-flank.left, .intro-flank.right { display: none; }
+  #canvas-3 { transform: translate(-50%, -50%) scale(0.78); border-radius: 50vh; clip-path: inset(0 6vw 0 6vw round 50vh); }
+  .interior-minimap-card { display: none; }
+  .interior-room-card { left: 1.5rem; right: 1.5rem; bottom: 6.5rem; max-width: none; }
 }
